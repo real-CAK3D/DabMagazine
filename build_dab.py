@@ -99,8 +99,14 @@ def build(m, final=False):
     open(os.path.join(SITE, "issues", m + ".html"), "w").write(html)
     eds = pk.issues(SITE, pattern=r"\d{4}-\d{2}")
     open(os.path.join(SITE, "index.html"), "w").write(open(os.path.join(SITE, "issues", eds[0] + ".html")).read().replace('href="../', 'href="').replace('src="../', 'src="'))
-    pk.archive_page(SITE, os.path.join(ROOT, fb.CSS_FILE), "pub-dab", "Dab Magazine", "every issue",
-                    "".join('<li><a href="issues/%s.html">%s</a></li>' % (x, pk.nice(x + "-01", "%B %Y")) for x in eds), "🤪")
+    # the back-issue rack is a cover gallery: every painted cover, tap one to read that issue
+    tiles = []
+    for i, x in enumerate(eds):
+        img = os.path.exists(os.path.join(SITE, "img", "covers", x + ".jpg"))
+        tiles.append('<li class="dab-cv"><a href="issues/%s.html">%s<span><b>No. %d</b> · %s</span></a></li>'
+                     % (x, ('<img src="img/covers/%s.jpg" alt="Dab Magazine cover, %s" loading="lazy">' % (x, pk.nice(x + "-01", "%B %Y"))) if img
+                        else '<i class="dab-cv-blank">DAB</i>', len(eds) - i, pk.nice(x + "-01", "%B %Y")))
+    pk.archive_page(SITE, os.path.join(ROOT, fb.CSS_FILE), "pub-dab dab-gallery", "Dab Magazine", "the cover gallery", "".join(tiles), "🤪")
     pk.latest(SITE, "Dab Magazine", m + "-01", "%s issue — %d strips" % (d.strftime("%B"), len(strips)), "issues/%s.html" % m, [x + "-01" for x in eds if x < m or final][:10],
               cover=("img/covers/%s.jpg" % m) if has_cover else "")
     if final:
