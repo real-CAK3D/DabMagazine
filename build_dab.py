@@ -50,10 +50,10 @@ def draw_cover(m, titles):
     month = dt.date.fromisoformat(m + "-01").strftime("%B %Y").upper()
     prompt = ("A satirical humor-magazine cover in the style of classic 1960s-70s American humor magazines, painted illustration, busy and funny. "
               "The masthead at the top reads exactly 'DAB' in huge bold slanted red-and-white letters, with a small banner 'THE GARDEN'S HUMOR MAGAZINE' and '%s'. "
-              "The cover star is CLYDIUS, a stocky muscular short-haired American pit bull terrier with a copper-brown coat, red nose and white chest, grinning goofily "
+              "The cover star is @@CLYDE@@ — drawn lean and a little tall, exactly like that, grinning goofily "
               "with his tongue out, wearing a tiny newspaper hat, sitting on a pile of tangled network cables and Raspberry Pi boards while a server rack smokes gently behind him. "
               "Small cover blurbs in hand lettering: 'THE CRON JOB THAT ATE MAINE', 'WHAT, ME REBOOT?', and '%s STRIPS INSIDE'. "
-              "Clean and family-friendly, no real brands, no real people, no copyrighted characters." % (month, len(titles)))
+              "Clean and family-friendly, no real brands, no real people, no copyrighted characters." % (month, len(titles))).replace("@@CLYDE@@", pk.CLYDE)
     try:
         b64 = cx._collect_image_b64(token, prompt=prompt, size="1024x1536", quality="medium")
     except Exception:
